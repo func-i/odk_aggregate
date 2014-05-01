@@ -19,7 +19,7 @@ Or install it yourself as:
 ## Usage
 
 
-### Get all forms
+#### Get all forms
 
 ```
   forms = OdkAggregate::Form.all
@@ -33,23 +33,31 @@ Or install it yourself as:
   end
 ```
 
-### Find a single form
+#### Find a single form
 
 ```
   form = OdkAggregate::Form.find(form_id)
   top_element = form.get_top_element
 ```
 
-### Find all submissions for a form
+#### Find all submissions for a form
 
 ```
   submissions = OdkAggregate::Submission.where(formId: form_id).submissions
 ```
 
-### Find a single submission
+#### Find a single submission
 
 ```
   OdkAggregate::Submission.where(formId: form_id, key: submissions.first, topElement: top_element)
+
+  OdkAggregate::Form.all.each do |form|
+    top_element = form.get_top_element
+    submissions = OdkAggregate::Submission.where(formId: form.form_id).submissions
+    submission = OdkAggregate::Submission.where(formId: form.form_id, key: submissions.first, topElement: top_element)
+    puts submission
+  end
+
 ```
 
 ## Contributing
