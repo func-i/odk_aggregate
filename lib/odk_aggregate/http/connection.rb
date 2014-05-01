@@ -2,6 +2,7 @@ require 'faraday_middleware'
 
 module OdkAggregate
   module Connection
+
     def connection
       @connection ||= Faraday.new(base_url, connection_options) do |connection|
         connection.response :xml

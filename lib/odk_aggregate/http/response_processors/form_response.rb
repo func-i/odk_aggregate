@@ -21,9 +21,14 @@ module OdkAggregate
       @response["formID"]
     end
 
+    def fields
+      response = MultiXml.parse Faraday.new(download_url).get.body.gsub("\n", ""), typecast_xml_value: false
+      response["html"]["head"]["model"]["bind"]
+    end
+
     def get_top_element
-      response = MultiXml.parse Faraday.new(download_url).get.body.gsub("\n", "")
-      response["html"]["head"]["model"]["bind"].reject{|a| a.blank?}.first["nodeset"].split("/")[1]
+      response = MultiXml.parse Faraday.new(download_url).get.body.gsub("\n", ""), typecast_xml_value: false
+      response["html"]["head"]["model"]["bind"].first["nodeset"].split("/")[1]
     end
   end
 end
