@@ -5,6 +5,10 @@ module OdkAggregate
       @response = response
     end
 
+    def full_response
+      @response
+    end
+
     def download_url
       @response["downloadUrl"]
     end
