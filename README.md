@@ -18,7 +18,39 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+
+### Get all forms
+
+```
+  forms = OdkAggregate::Form.all
+  form = forms.first
+  form.form_id
+  form.download_url
+  form.manifest_url
+
+  OdkAggregate::Form.all.each do |form|
+    puts form.get_top_element
+  end
+```
+
+### Find a single form
+
+```
+  form = OdkAggregate::Form.find(form_id)
+  top_element = form.get_top_element
+```
+
+### Find all submissions for a form
+
+```
+  submissions = OdkAggregate::Submission.where(formId: form_id).submissions
+```
+
+### Find a single submission
+
+```
+  OdkAggregate::Submission.where(formId: form_id, key: submissions.first, topElement: top_element)
+```
 
 ## Contributing
 

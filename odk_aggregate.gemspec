@@ -7,9 +7,9 @@ Gem::Specification.new do |spec|
   spec.name          = "odk_aggregate"
   spec.version       = OdkAggregate::VERSION
   spec.authors       = ["Jonathan Salis"]
-  spec.email         = ["jtsseneca@hotmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.email         = ["jon@functionalimperative.com"]
+  spec.description   = %q{An API wrapper to connect to ODK Aggregate}
+  spec.summary       = %q{An API wrapper to connect to ODK Aggregate}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -20,4 +20,8 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
+
+  spec.add_runtime_dependency 'faraday_middleware', '~> 0.9'
+  spec.add_runtime_dependency 'rash',               '~> 0.4'
+  spec.add_runtime_dependency 'multi_xml'
 end
