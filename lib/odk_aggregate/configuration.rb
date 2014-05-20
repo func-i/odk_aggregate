@@ -15,7 +15,7 @@ module OdkAggregate
     end
 
     def base_url
-      "http://opendatakit.appspot.com/"
+      "https://opendatakit.appspot.com/"
     end
 
     def configure
