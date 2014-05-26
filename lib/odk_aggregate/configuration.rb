@@ -4,7 +4,7 @@ module OdkAggregate
   module Configuration
 
     extend OdkAggregate::Utils
-    mattr_accessor :version, :language
+    mattr_accessor :version, :language, :base_url
 
     def version
       @version ||= "1.0"
@@ -15,7 +15,7 @@ module OdkAggregate
     end
 
     def base_url
-      "https://opendatakit.appspot.com/"
+      @base_url ||= "https://opendatakit.appspot.com/"
     end
 
     def configure
