@@ -14,11 +14,16 @@ module OdkAggregate
     end
 
     def submissions
-      @response["idChunk"]["idList"]["id"]
+      if @response["idChunk"]
+        resp =  @response["idChunk"]["idList"] ? @response["idChunk"]["idList"]["id"] : []
+      else
+        raise "An error occurred while retreiving submissions"
+      end
+      resp.is_a?(Array) ? resp : [resp]
     end
 
     def opaque_data
-      @response["idChunk"]["resumptionCursor"]
+      @response ? @response["idChunk"]["resumptionCursor"] : nil
     end
 
   end
