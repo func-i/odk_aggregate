@@ -11,7 +11,8 @@ module OdkAggregate
     include OdkAggregate::Form
     include OdkAggregate::Submission
 
-    def initialize(url)
+    def initialize(url = nil)
+      url = base_url if url.blank?
       connect(url)
     end
 
