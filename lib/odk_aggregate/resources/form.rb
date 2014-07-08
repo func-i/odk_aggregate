@@ -1,26 +1,26 @@
 require 'odk_aggregate/http/response_processors/form_response'
 
 module OdkAggregate
-  class Form
+  module Form
 
-    def self.all
+    def all_forms
       result = []
-      OdkAggregate.connection.send(:get, 'xformsList').body["xforms"]["xform"].each do |f|
+      @connection.send(:get, 'xformsList').body["xforms"]["xform"].each do |f|
         result << OdkAggregate::FormResponse.new(f)
       end
       result
     end
 
-    def self.first
-      OdkAggregate::FormResponse.new OdkAggregate.connection.send(:get, 'xformsList').body["xforms"]["xform"].first
+    def first_form
+      OdkAggregate::FormResponse.new @connection.send(:get, 'xformsList').body["xforms"]["xform"].first
     end
 
-    def self.last
-      OdkAggregate::FormResponse.new OdkAggregate.connection.send(:get, 'xformsList').body["xforms"]["xform"].last
+    def last_form
+      OdkAggregate::FormResponse.new @connection.send(:get, 'xformsList').body["xforms"]["xform"].last
     end
 
-    def self.find(id)
-      OdkAggregate::FormResponse.new OdkAggregate.connection.send(:get, 'xformsList', formID: id, verbose: true).body["xforms"]["xform"]
+    def find_form(id)
+      OdkAggregate::FormResponse.new @connection.send(:get, 'xformsList', formID: id, verbose: true).body["xforms"]["xform"]
     end
 
   end

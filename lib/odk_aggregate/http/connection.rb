@@ -1,16 +1,31 @@
 require 'faraday_middleware'
 
-module OdkAggregate
-  module Connection
+require 'odk_aggregate/resources/form'
+require 'odk_aggregate/resources/submission'
 
-    def connection
-      @connection ||= Faraday.new(base_url, connection_options) do |connection|
+
+module OdkAggregate
+  class Connection
+
+    include OdkAggregate::Configuration
+    include OdkAggregate::Form
+    include OdkAggregate::Submission
+
+    def initialize(url)
+      connect(url)
+    end
+
+    private
+
+    def connect(url)
+      @connection ||= Faraday.new(url, connection_options) do |connection|
         connection.response :xml
         connection.use FaradayMiddleware::Rashify
 
         connection.adapter :net_http
       end
     end
+
 
     def connection_options
       @connection_options ||= {

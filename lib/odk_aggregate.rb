@@ -7,5 +7,5 @@ require 'odk_aggregate/resources/form'
 
 module OdkAggregate
   extend OdkAggregate::Configuration
-  extend OdkAggregate::Connection
+#  extend OdkAggregate::Connection
 end
