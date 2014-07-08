@@ -18,17 +18,23 @@ Or install it yourself as:
 
 ## Usage
 
+#### Initialize OdkAggregate
+
+```
+  @odk = OdkAggregate::Connection.new("http://your.url.com")
+```
+
 
 #### Get all forms
 
 ```
-  forms = OdkAggregate::Form.all
+  forms = @odk.all_forms
   form = forms.first
   form.form_id
   form.download_url
   form.manifest_url
 
-  OdkAggregate::Form.all.each do |form|
+  @odk.all_forms.each do |form|
     puts form.get_top_element
   end
 ```
@@ -36,25 +42,25 @@ Or install it yourself as:
 #### Find a single form
 
 ```
-  form = OdkAggregate::Form.find(form_id)
+  form = @odk.find_form(form_id)
   top_element = form.get_top_element
 ```
 
 #### Find all submissions for a form
 
 ```
-  submissions = OdkAggregate::Submission.where(formId: form_id).submissions
+  submissions = @odk.sumissions_where(formId: form_id).submissions
 ```
 
 #### Find a single submission
 
 ```
-  OdkAggregate::Submission.where(formId: form_id, key: submissions.first, topElement: top_element)
+  @odk.submissions_where(formId: form_id, key: submissions.first, topElement: top_element)
 
-  OdkAggregate::Form.all.each do |form|
+  @odk.all_forms.each do |form|
     top_element = form.get_top_element
-    submissions = OdkAggregate::Submission.where(formId: form.form_id).submissions
-    submission = OdkAggregate::Submission.where(formId: form.form_id, key: submissions.first, topElement: top_element)
+    submissions = @odk.submissions_where(formId: form.form_id).submissions
+    submission = @odk.submissions_where(formId: form.form_id, key: submissions.first, topElement: top_element)
     puts submission
   end
 
