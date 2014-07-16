@@ -1,4 +1,4 @@
-require 'faraday'
+require 'faraday_middleware'
 require 'net/http/digest_auth'
 
 module Faraday

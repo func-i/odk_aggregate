@@ -22,7 +22,7 @@ module OdkAggregate
 
     def connect(url, username = nil, password = nil)
       @connection ||= Faraday.new(url, connection_options) do |connection|
-        connection.response :xml
+        connection.response :xml,  :content_type => /\bxml$/
         connection.use FaradayMiddleware::Rashify
         connection.response :logger
         connection.adapter :net_http
