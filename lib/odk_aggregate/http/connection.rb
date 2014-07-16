@@ -1,5 +1,6 @@
 require 'base64'
-require 'faraday_middleware'
+#require 'faraday'
+require 'odk_aggregate/http/digestauth'
 
 require 'odk_aggregate/resources/form'
 require 'odk_aggregate/resources/submission'
@@ -20,12 +21,14 @@ module OdkAggregate
     private
 
     def connect(url, username = nil, password = nil)
-      @connection ||= Faraday.new(url, connection_options(username, password)) do |connection|
-        connection.response :xml
-        connection.use FaradayMiddleware::Rashify
+      @connection ||= Faraday.new(url, connection_options) do |connection|
+        #connection.response :xml
+        #connection.use FaradayMiddleware::Rashify
         connection.response :logger
         connection.adapter :net_http
       end
+
+      @connection.digest_auth username, password if username && password
     end
 
 
@@ -42,10 +45,10 @@ module OdkAggregate
         }
       }
 
-      if username && password
-        basicAuthString = Base64.strict_encode64("#{username}:#{password}")
-        @connection_options[:headers]["Authorization"] = "Basic #{basicAuthString}"
-      end
+      # if username && password
+      #   basicAuthString = Base64.strict_encode64("#{username}:#{password}")
+      #   @connection_options[:headers]["Authorization"] = "Basic #{basicAuthString}"
+      # end
 
       @connection_options
     end
