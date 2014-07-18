@@ -35,7 +35,7 @@ module OdkAggregate
 
     def get_top_element
       response = @connection.send(:get, @download_url)
-      response["html"]["head"]["model"]["bind"].reject { |f| f.empty? }.first["nodeset"].split("/")[1]
+      response.body["html"]["head"]["model"]["bind"].reject { |f| f.empty? }.first["nodeset"].split("/")[1]
     end
   end
 end
