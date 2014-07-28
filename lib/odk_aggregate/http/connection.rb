@@ -25,7 +25,7 @@ module OdkAggregate
       @password = password
 
       @connection ||= Faraday.new(url, connection_options) do |connection|
-        connection.response :xml,  :content_type => /\bxml$/
+        #connection.response :xml,  :content_type => /\bxml$/, typecast_xml_value: false
         connection.use FaradayMiddleware::Rashify
         connection.response :logger
         connection.adapter :net_http

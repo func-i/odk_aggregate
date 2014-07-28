@@ -29,13 +29,19 @@ module OdkAggregate
     end
 
     def fields
-      response = @connection.send(:get, @download_url)
-      response.body["html"]["head"]["model"]["bind"].reject { |f| f.empty? }
+      resp = @connection.send(:get, @download_url).body
+      response = MultiXml.parse resp, typecast_xml_value: false
+      response["html"]["head"]["model"]["bind"]
+      #response = @connection.send(:get, @download_url)
+      #response.body["html"]["head"]["model"]["bind"].reject { |f| f.empty? }
     end
 
     def get_top_element
-      response = @connection.send(:get, @download_url)
-      response.body["html"]["head"]["model"]["bind"].reject { |f| f.empty? }.first["nodeset"].split("/")[1]
+      resp = @connection.send(:get, @download_url).body
+      response = MultiXml.parse resp, typecast_xml_value: false
+      response["html"]["head"]["model"]["bind"]
+      #response = @connection.send(:get, @download_url)
+      #response.body["html"]["head"]["model"]["bind"].reject { |f| f.empty? }.first["nodeset"].split("/")[1]
     end
   end
 end
