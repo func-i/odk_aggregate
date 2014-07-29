@@ -39,7 +39,7 @@ module OdkAggregate
     def get_top_element
       resp = @connection.send(:get, @download_url).body
       response = MultiXml.parse resp, typecast_xml_value: false
-      response["html"]["head"]["model"]["bind"]
+      response["html"]["head"]["model"]["bind"].first["nodeset"].split("/")[1]
       #response = @connection.send(:get, @download_url)
       #response.body["html"]["head"]["model"]["bind"].reject { |f| f.empty? }.first["nodeset"].split("/")[1]
     end

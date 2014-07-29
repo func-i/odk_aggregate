@@ -25,6 +25,7 @@ module OdkAggregate
       }
       resp = @connection.send(:get, 'view/downloadSubmission', hash).body
       response = MultiXml.parse resp
+      #response["submission"]["data"]
     end
   end
 end
