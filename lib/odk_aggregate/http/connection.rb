@@ -45,6 +45,9 @@ module OdkAggregate
         request: {
           open_timeout: 10,
           timeout: 30
+        },
+        ssl: {
+          verify: false
         }
       }
 
