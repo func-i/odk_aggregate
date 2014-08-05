@@ -6,14 +6,14 @@ module OdkAggregate
 
     def all_forms
       result = []
-      @connection.send(:get, 'xformsList').body["xforms"]["xform"].each do |f|
+      MultiXml.parse(@connection.send(:get, 'xformsList').body)["xforms"]["xform"].each do |f|
         result << OdkAggregate::FormResponse.new(f, @connection, @username, @password)
       end
       result
     end
 
     def first_form
-      OdkAggregate::FormResponse.new @connection.send(:get, 'xformsList').body["xforms"]["xform"].first,
+      OdkAggregate::FormResponse.new MultiXml.parse(@connection.send(:get, 'xformsList').body)["xforms"]["xform"].first,
                                      @connection, @username, @password
     end
 
