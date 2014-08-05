@@ -14,7 +14,8 @@ module OdkAggregate
     protected
 
     def get_list(conditions)
-      response = @connection.send(:get, 'view/submissionList', conditions).body
+      resp = @connection.send(:get, 'view/submissionList', conditions).body
+      response = MultiXml.parse(resp)
       OdkAggregate::SubmissionListResponse.new(response)
     end
 
@@ -22,7 +23,9 @@ module OdkAggregate
       hash = {
         formId: "#{conditions[:formId]}[@version=null and @uiVersion=null]/#{conditions[:topElement]}[@key=#{conditions[:key]}]"
       }
-      response = @connection.send(:get, 'view/downloadSubmission', hash).body
+      resp = @connection.send(:get, 'view/downloadSubmission', hash).body
+      response = MultiXml.parse resp
+      #response["submission"]["data"]
     end
   end
 end
