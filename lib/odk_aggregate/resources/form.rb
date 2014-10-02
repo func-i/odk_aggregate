@@ -6,8 +6,16 @@ module OdkAggregate
 
     def all_forms
       result = []
-      MultiXml.parse(@connection.send(:get, 'xformsList').body)["xforms"]["xform"].each do |f|
-        result << OdkAggregate::FormResponse.new(f, @connection, @username, @password)
+      xforms = MultiXml.parse(@connection.send(:get, 'xformsList').body)["xforms"]
+
+      if xforms["xform"]
+        if xforms["xform"].is_a?(Array)
+          xforms["xform"].each do |f|
+            result << OdkAggregate::FormResponse.new(f, @connection, @username, @password)
+          end
+        else
+          result << OdkAggregate::FormResponse.new(xforms["xform"], @connection, @username, @password)
+        end
       end
       result
     end
@@ -17,13 +25,13 @@ module OdkAggregate
                                      @connection, @username, @password
     end
 
-    def last_form
-      response = MultiXml.parse(@connection.send(:get, 'xformsList', formID: id, verbose: true).body)["xforms"]["xform"] 
-      OdkAggregate::FormResponse.new reponse.last, @connection, @username, @password
-    end
+    # def last_form
+    #   response = MultiXml.parse(@connection.send(:get, 'xformsList', formID: id, verbose: true).body)["xforms"]["xform"]
+    #   OdkAggregate::FormResponse.new reponse.last, @connection, @username, @password
+    # end
 
     def find_form(id)
-      response = MultiXml.parse(@connection.send(:get, 'xformsList', formID: id, verbose: true).body)["xforms"]["xform"] 
+      response = MultiXml.parse(@connection.send(:get, 'xformsList', formID: id, verbose: true).body)["xforms"]["xform"]
       OdkAggregate::FormResponse.new response, @connection, @username, @password
     end
 
