@@ -30,8 +30,21 @@ module OdkAggregate
 
     def fields
       resp = @connection.send(:get, @download_url).body
-      response = MultiXml.parse resp, typecast_xml_value: false
-      response["html"]["head"]["model"]["bind"]
+      response = MultiXml.parse resp, typecast_xml_value: false      
+      final_response = response["html"]["head"]["model"]["bind"]
+
+      response["html"]["body"].each_pair do |key, value| 
+        if value.is_a?(Array)      
+          value.each do |v|
+            set_field_response_group(final_response, key, v)
+          end
+        else
+          set_field_response_group(final_response, key, value)
+        end
+      end
+
+      final_response
+
       #response = @connection.send(:get, @download_url)
       #response.body["html"]["head"]["model"]["bind"].reject { |f| f.empty? }
     end
@@ -42,6 +55,21 @@ module OdkAggregate
       response["html"]["head"]["model"]["bind"].first["nodeset"].split("/")[1]
       #response = @connection.send(:get, @download_url)
       #response.body["html"]["head"]["model"]["bind"].reject { |f| f.empty? }.first["nodeset"].split("/")[1]
+    end
+
+    protected
+
+    def set_field_response_group(final_response, key, value)
+      ref = value["ref"]      
+      final_response.each do |field|
+        if field["nodeset"].include?("#{ref}")
+          if key.eql?("group")
+            field["group"] = true
+          else
+            field["group"] = false
+          end
+        end
+      end
     end
   end
 end

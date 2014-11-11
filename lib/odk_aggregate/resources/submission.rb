@@ -24,6 +24,7 @@ module OdkAggregate
         formId: "#{conditions[:formId]}[@version=null and @uiVersion=null]/#{conditions[:topElement]}[@key=#{conditions[:key]}]"
       }
       resp = @connection.send(:get, 'view/downloadSubmission', hash).body
+      puts resp
       response = MultiXml.parse resp
       #response["submission"]["data"]
     end
