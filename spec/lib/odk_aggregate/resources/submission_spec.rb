@@ -19,97 +19,20 @@ describe OdkAggregate::Submission do
     end
 
     context "key provided" do
-      let(:body_as_hash) do
-        {
-          "submission"=> {
-            "xmlns"=>"http://opendatakit.org/submissions",
-            "xmlns:orx"=>"http://openrosa.org/xforms",
-            "data"=>{
-              "Survey_10_22"=>{
-                "id"=>"Survey_10-22",
-                "instanceID"=>"uuid:12345abc",
-                "Name"=>"Mm",
-                "ID"=>"2",
-                "Height"=>"9",
-                "Photo"=>"1407845936988.jpg",
-                "meta"=>{
-                  "instanceID"=>"uuid:aa5c7780-b330-4cab-aa56-57c3c273a404"}}},
-            "mediaFile" => Helper.mediafile_hash(download_url)}
-        }
-      end
-      let(:body_as_xml) do
-        %Q{
-            <submission xmlns="http://opendatakit.org/submissions" xmlns:orx="http://openrosa.org/xforms" >
-              <data>
-                <Survey_10-22 id="Survey_10-22" instanceID="uuid:12345abc">
-                  <Name>Mm</Name>
-                  <ID>2</ID>
-                  <Height>9</Height>
-                  <Photo>1407845936988.jpg</Photo>
-                  <orx:meta>
-                    <orx:instanceID>uuid:aa5c7780-b330-4cab-aa56-57c3c273a404</orx:instanceID>
-                  </orx:meta>
-                </Survey_10-22>
-              </data>
-              <mediaFile>
-                <filename>1407845936988.jpg</filename>
-                <hash>md5:55a54008ad1ba589aa210d2629c1df41</hash>
-                <downloadUrl>#{download_url}</downloadUrl>
-              </mediaFile>
-            </submission>
-        }
-      end
-      let(:body_as_xml_bad_md5) do
-        %Q{
-            <submission xmlns="http://opendatakit.org/submissions" xmlns:orx="http://openrosa.org/xforms" >
-              <data>
-                <Survey_10-22 id="Survey_10-22" instanceID="uuid:12345abc">
-                  <Name>Mm</Name>
-                  <ID>2</ID>
-                  <Height>9</Height>
-                  <Photo>1407845936988.jpg</Photo>
-                  <orx:meta>
-                    <orx:instanceID>uuid:aa5c7780-b330-4cab-aa56-57c3c273a404</orx:instanceID>
-                  </orx:meta>
-                </Survey_10-22>
-              </data>
-              <mediaFile>
-                <filename>1407845936988.jpg</filename>
-                <hash>md5:11111111111111111111111111111111</hash>
-                <downloadUrl>#{download_url}</downloadUrl>
-              </mediaFile>
-            </submission>
-        }
-      end
-      let(:body_as_xml_sans_mediafile) do
-        %Q{
-            <submission xmlns="http://opendatakit.org/submissions" xmlns:orx="http://openrosa.org/xforms" >
-              <data>
-                <Survey_10-22 id="Survey_10-22" instanceID="uuid:12345abc">
-                  <Name>Mm</Name>
-                  <ID>2</ID>
-                  <Height>9</Height>
-                  <Photo>1407845936988.jpg</Photo>
-                  <orx:meta>
-                    <orx:instanceID>uuid:aa5c7780-b330-4cab-aa56-57c3c273a404</orx:instanceID>
-                  </orx:meta>
-                </Survey_10-22>
-              </data>
-            </submission>
-        }
-      end
-      let(:download_url) { "https://not.really.a.url" }
+      let(:submission_as_hash) { Helper.submission_hash }
+      let(:submission_as_xml) { Helper.submission_as_xml }
+      let(:submission_as_xml_bad_md5) { Helper.submission_as_xml_bad_md5 }
+      let(:submission_as_xml_sans_mediafile) { Helper.submission_as_xml_sans_mediafile }
+      let(:download_url) { Helper.download_url }
       let(:file_response) { double(Object, body: Helper.attachment_contents) }
       let(:key) { "123" }
       let(:formId) { "456" }
       let(:topElement) { "xyz" }
-      let(:response) { double(Object, body: body_as_xml) }
-      let(:response_bad_md5) { double(Object, body: body_as_xml_bad_md5) }
-      let(:response_sans_mediafile) { double(Object, body: body_as_xml_sans_mediafile) }
+      let(:response) { double(Object, body: submission_as_xml) }
+      let(:response_bad_md5) { double(Object, body: submission_as_xml_bad_md5) }
+      let(:response_sans_mediafile) { double(Object, body: submission_as_xml_sans_mediafile) }
       let(:submission_as_hash_with_file_contents) do
-        {
-          "submission" => body_as_hash["submission"].merge("mediaFile" => Helper.mediafile_with_file_contents_hash(download_url))
-        }
+        Helper.submission_as_hash_with_file_contents
       end
 
       it "downloads the requested submission" do
@@ -122,7 +45,7 @@ describe OdkAggregate::Submission do
       it "represents the submission as a hash" do
         allow(connection).to receive(:get).with('view/downloadSubmission', anything).and_return(response)
 
-        expect(subject.submissions_where({formId: formId, topElement: topElement, key: key})).to eql(body_as_hash)
+        expect(subject.submissions_where({formId: formId, topElement: topElement, key: key})).to eql(submission_as_hash)
       end
 
       context "requesting the mediafile" do
