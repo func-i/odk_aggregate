@@ -1,4 +1,5 @@
 require 'odk_aggregate/http/response_processors/submission_list_response'
+require 'digest/md5'
 
 module OdkAggregate
   module Submission
@@ -25,7 +26,26 @@ module OdkAggregate
       }
       resp = @connection.send(:get, 'view/downloadSubmission', hash).body
       response = MultiXml.parse resp
-      #response["submission"]["data"]
+
+      if response["submission"]["mediaFile"] and conditions[:fetch_mediafile]
+        response["submission"]["mediaFile"]["contents"] = get_mediafile_contents(response)
+      end
+
+      response
+    end
+
+    def get_mediafile_contents(response)
+      file_contents = @connection.send(:get, response["submission"]["mediaFile"]["downloadUrl"]).body
+      raise  "MD5 signature mismatch for submission mediaFile" unless contents_signature_matches?(response, file_contents)
+      file_contents
+    end
+
+    def contents_signature_matches?(submission, contents)
+      Digest::MD5.hexdigest(contents) == mediaFile_signature(submission)
+    end
+
+    def mediaFile_signature(submission_hash)
+      submission_hash["submission"]["mediaFile"]["hash"].split(":").last
     end
   end
 end
